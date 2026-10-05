@@ -1,0 +1,20 @@
+name: Windows Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: windows-2025
+
+    steps:
+      - name: Check Windows Resources
+        shell: powershell
+        run: |
+          Write-Host "=== Windows Runner ==="
+          Get-CimInstance Win32_OperatingSystem |
+            Select-Object Caption,
+              @{Name="RAM_GB";Expression={[math]::Round($_.TotalVisibleMemorySize/1MB,2)}}
+
+          Write-Host "=== CPU ==="
+          (Get-CimInstance Win32_Processor).NumberOfLogicalProcessors
